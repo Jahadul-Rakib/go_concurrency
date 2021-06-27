@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	listener, err :=net.Listen("tcp","localhost:8080")
+	listener, err := net.Listen("tcp", "localhost:8080")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -24,12 +24,11 @@ func main() {
 }
 
 func handleConnection(conn net.Conn) {
-	for{
-		_ , err := io.WriteString(conn, "Print Response from server \n")
+	for {
+		_, err := io.WriteString(conn, "Print Response from server \n")
 		if err != nil {
 			log.Println(err.Error())
 		}
 		time.Sleep(time.Second)
 	}
-	//handleConnection(conn)
 }
