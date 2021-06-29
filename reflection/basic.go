@@ -37,6 +37,7 @@ func checkValidation(std interface{}) []string {
 
 			name := obj.Field(i).Name
 			fieldValue := reflect.ValueOf(std).Field(i)
+			kind := fieldValue.Kind()
 
 			required := obj.Field(i).Tag.Get("required")
 			if required != "false" {
@@ -51,8 +52,15 @@ func checkValidation(std interface{}) []string {
 				if err != nil {
 					exception += name + " data parsing error in max value."
 				}
-				preString := strconv.Itoa(int(fieldValue.Int()))
-				length := len(preString)
+				var preStringForConvertString string
+
+				if kind == reflect.Int {
+					preStringForConvertString = strconv.Itoa(int(fieldValue.Int())) //problem
+				} else if kind == reflect.String {
+					preStringForConvertString = fieldValue.String()
+				}
+
+				length := len(preStringForConvertString)
 
 				if data != length {
 					exception += name + " value do not meet requirement."
