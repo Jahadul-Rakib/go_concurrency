@@ -26,19 +26,28 @@ func (s *Square) sides() int {
 func checkDataUsingReflection(v interface{}) {
 	valueType := reflect.TypeOf(v)
 
-	log.Println(valueType.Name())
-	log.Println(valueType.Kind())
+	if valueType.Kind() == reflect.Struct {
+		log.Println(valueType.Name())
+		log.Println(valueType.Kind())
 
-	totalField := valueType.NumField()
-	log.Println(totalField)
+		totalField := valueType.NumField()
+		log.Println(totalField)
 
-	for i := 0; i < totalField; i++ {
-		log.Println(valueType.Field(i))
-		value := valueType.Field(i).Tag.Get("require")
-		if value != "" {
-			log.Println("field name: ", valueType.Field(i).Name)
-			log.Println("Value of field by required: ", value)
+		for i := 0; i < totalField; i++ {
+			log.Println(valueType.Field(i))
+			value := valueType.Field(i).Tag.Get("require")
+			if value != "" {
+				log.Println("field name: ", valueType.Field(i).Name)
+				log.Println("Value of field by required: ", value)
+			}
 		}
+	}
+
+	if reflect.ValueOf(v).Kind() == reflect.Int {
+		v := reflect.ValueOf(v)
+		log.Println("Value of ", v)
+		//v.SetInt(2)
+		log.Println("Value of ", v)
 	}
 
 }
@@ -60,4 +69,5 @@ func main() {
 	}(square2)
 
 	checkDataUsingReflection(square1)
+	checkDataUsingReflection(12)
 }
