@@ -9,14 +9,14 @@ import (
 
 type Student struct {
 	Name   string `json:"name" required:"true"`
-	Number int    `json:"number" required:"true" max:"8"`
+	Number int    `json:"number" required:"true" max:"8" min:"5"`
 }
 
 func main() {
 
 	std := Student{
 		Name:   "J I Rakib",
-		Number: 80023583,
+		Number: 80022321,
 	}
 
 	validation := checkValidation(std)
@@ -62,8 +62,29 @@ func checkValidation(std interface{}) []string {
 
 				length := len(preStringForConvertString)
 
-				if data != length {
-					exception += name + " value do not meet requirement."
+				if !(data >= length) {
+					exception += name + " can be contain maximum " + strconv.Itoa(data) + " character."
+				}
+			}
+
+			min := obj.Field(i).Tag.Get("min")
+			if min != "" {
+				data, err := strconv.Atoi(min)
+				if err != nil {
+					exception += name + " data parsing error in min value."
+				}
+				var preStringForConvertString string
+
+				if kind == reflect.Int {
+					preStringForConvertString = strconv.Itoa(int(fieldValue.Int())) //problem
+				} else if kind == reflect.String {
+					preStringForConvertString = fieldValue.String()
+				}
+
+				length := len(preStringForConvertString)
+
+				if !(data <= length) {
+					exception += name + " must contain minimum " + strconv.Itoa(data) + " character."
 				}
 			}
 
